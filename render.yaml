@@ -1,0 +1,42 @@
+# Render Blueprint — deploy frontend + RAG API together
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  # ── Backend: RAG + LLM API ──────────────────────────────────────────────
+  - type: web
+    name: architecture-playground-api
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install
+    startCommand: npm run start:server
+    healthCheckPath: /api/rag/status
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: architecture-playground
+          envVarKey: RENDER_EXTERNAL_URL
+
+  # ── Frontend: React static site ───────────────────────────────────────────
+  - type: web
+    name: architecture-playground
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_RAG_API_URL
+        fromService:
+          type: web
+          name: architecture-playground-api
+          envVarKey: RENDER_EXTERNAL_URL
