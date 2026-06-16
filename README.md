@@ -12,7 +12,29 @@ A production-quality visual learning platform for **SOLID Principles**, **Design
 - **Quiz Engine** — Easy, Medium, Hard questions with explanations
 - **Code Playground** — Monaco Editor with pattern templates
 - **Gamification** — XP, levels, badges, and achievements
-- **AI Tutor** — Rule-based assistant for pattern questions
+- **AI Tutor** — RAG + OpenAI LLM assistant for architecture and patterns
+
+## Deploy to Render (Frontend + Backend)
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Padmamma123/architecture-playground)
+
+**Prerequisites:** Push this repo to GitHub first (see below).
+
+1. Create repo: [github.com/new](https://github.com/new) → name: `architecture-playground`
+2. Push code:
+   ```bash
+   git remote add origin https://github.com/Padmamma123/architecture-playground.git
+   git push -u origin main
+   ```
+3. Click **Deploy to Render** above, or go to [Render Blueprints](https://dashboard.render.com/blueprints) → **New Blueprint Instance** → select your repo
+4. Set **OPENAI_API_KEY** when prompted → **Apply**
+
+| Service | URL |
+|---------|-----|
+| Frontend | `https://architecture-playground.onrender.com` |
+| API | `https://architecture-playground-api.onrender.com` |
+
+See [DEPLOY.md](./DEPLOY.md) for full details.
 
 ## Tech Stack
 
