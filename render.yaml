@@ -27,7 +27,6 @@ services:
   - type: web
     name: architecture-playground-ui
     runtime: static
-    plan: free
     buildCommand: npm install --include=dev && npm run build
     staticPublishPath: ./dist
     routes:
