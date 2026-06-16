@@ -27,11 +27,11 @@ A production-quality visual learning platform for **SOLID Principles**, **Design
    git push -u origin main
    ```
 3. Click **Deploy to Render** above, or go to [Render Blueprints](https://dashboard.render.com/blueprints) → **New Blueprint Instance** → select your repo
-4. Set **OPENAI_API_KEY** when prompted → **Apply**
+4. Set **GROQ_API_KEY** when prompted → **Apply**
 
 | Service | URL |
 |---------|-----|
-| Frontend | `https://architecture-playground.onrender.com` |
+| Frontend | `https://architecture-playground-ui.onrender.com` |
 | API | `https://architecture-playground-api.onrender.com` |
 
 See [DEPLOY.md](./DEPLOY.md) for full details.
