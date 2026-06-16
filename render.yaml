@@ -4,7 +4,7 @@
 services:
   # ── Backend: RAG + LLM API ──────────────────────────────────────────────
   - type: web
-    name: architecture-playground-api
+    name: padmamma123-playground-api
     runtime: node
     plan: free
     region: oregon
@@ -25,7 +25,7 @@ services:
 
   # ── Frontend: React static site ───────────────────────────────────────────
   - type: web
-    name: architecture-playground-ui
+    name: padmamma123-playground-ui
     runtime: static
     buildCommand: npm ci --include=dev && npm run build
     staticPublishPath: ./dist
@@ -39,4 +39,4 @@ services:
       - key: NODE_VERSION
         value: 20.11.0
       - key: VITE_RAG_API_URL
-        value: https://architecture-playground-api.onrender.com
+        value: https://padmamma123-playground-api.onrender.com

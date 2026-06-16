@@ -31,8 +31,8 @@ A production-quality visual learning platform for **SOLID Principles**, **Design
 
 | Service | URL |
 |---------|-----|
-| Frontend | `https://architecture-playground-ui.onrender.com` |
-| API | `https://architecture-playground-api.onrender.com` |
+| Frontend | `https://padmamma123-playground-ui.onrender.com` |
+| API | `https://padmamma123-playground-api.onrender.com` |
 
 See [DEPLOY.md](./DEPLOY.md) for full details.
 

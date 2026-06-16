@@ -35,8 +35,8 @@ git push -u origin main
 2. Click **New Blueprint Instance**
 3. Connect GitHub → select `Padmamma123/architecture-playground`
 4. Render reads `render.yaml` and creates **2 services**:
-   - `architecture-playground-api` — Node.js RAG backend
-   - `architecture-playground` — React static frontend
+   - `padmamma123-playground-api` — Node.js RAG backend
+   - `padmamma123-playground-ui` — React static frontend
 5. Add environment variable when prompted (on the **API** service):
    - **GROQ_API_KEY** = your `gsk_...` key
    - **LLM_MODEL** = `llama-3.3-70b-versatile` (optional — default in blueprint)
@@ -48,8 +48,8 @@ git push -u origin main
 
 | Service | URL |
 |---------|-----|
-| Frontend | `https://architecture-playground-ui.onrender.com` |
-| Backend | `https://architecture-playground-api.onrender.com/api/rag/status` |
+| Frontend | `https://padmamma123-playground-ui.onrender.com` |
+| Backend | `https://padmamma123-playground-api.onrender.com/api/rag/status` |
 
 Open frontend → AI Tutor → badge should show **RAG + LLM**.
 
