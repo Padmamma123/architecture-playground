@@ -16,10 +16,12 @@ services:
         value: production
       - key: NODE_VERSION
         value: 20.11.0
+      - key: GROQ_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: llama-3.3-70b-versatile
       - key: OPENAI_API_KEY
         sync: false
-      - key: OPENAI_MODEL
-        value: gpt-4o-mini
 
   # ── Frontend: React static site ───────────────────────────────────────────
   - type: web

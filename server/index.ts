@@ -5,7 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import { runRagPipeline } from './rag/pipeline.js';
 import { getChunkCount } from '../src/rag/knowledgeIndex.js';
-import { isLlmEnabled, getLlmModel } from './rag/llm.js';
+import { isLlmEnabled, getLlmModel, getLlmProvider } from './rag/llm.js';
 import type { RagChatRequest } from '../src/rag/types.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -35,14 +35,16 @@ app.use(express.json({ limit: '1mb' }));
 
 app.get('/api/rag/status', (_req, res) => {
   const llm = isLlmEnabled();
+  const provider = getLlmProvider();
   res.json({
     ready: true,
     llmEnabled: llm,
+    provider,
     model: llm ? getLlmModel() : null,
     chunkCount: getChunkCount(),
     message: llm
-      ? `RAG + LLM ready (${getLlmModel()}).`
-      : 'RAG retrieval ready. Set OPENAI_API_KEY on Render for LLM answers.',
+      ? `RAG + ${provider === 'groq' ? 'Groq' : 'OpenAI'} (${getLlmModel()}).`
+      : 'RAG retrieval ready. Set GROQ_API_KEY or OPENAI_API_KEY for LLM answers.',
   });
 });
 
@@ -81,8 +83,8 @@ app.post('/api/chat', async (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
   const llm = isLlmEnabled();
+  const provider = getLlmProvider();
   console.log(`RAG API on port ${PORT}`);
-  console.log(`LLM: ${llm ? getLlmModel() : 'DISABLED — set OPENAI_API_KEY'}`);
+  console.log(`LLM: ${llm ? `${provider} (${getLlmModel()})` : 'DISABLED — set GROQ_API_KEY or OPENAI_API_KEY'}`);
   console.log(`Chunks: ${getChunkCount()}`);
-  console.log(`CORS origins: ${allowedOrigins.join(', ') || 'onrender.com only'}`);
 });

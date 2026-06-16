@@ -39,6 +39,7 @@ export interface RagChatResponse {
 export interface RagStatus {
   ready: boolean;
   llmEnabled: boolean;
+  provider?: 'groq' | 'openai' | null;
   model: string | null;
   chunkCount: number;
   message: string;

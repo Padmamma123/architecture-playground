@@ -112,7 +112,9 @@ export default function AiTutorPanel() {
               <SmartToyIcon sx={{ color: 'primary.main' }} />
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Alex — AI Tutor</Typography>
               <Chip
-                label={status?.llmEnabled ? 'RAG + LLM' : status?.ready ? 'Retrieval only' : 'Offline'}
+                label={status?.llmEnabled
+                  ? `RAG + ${status.provider === 'groq' ? 'Groq' : 'LLM'}`
+                  : status?.ready ? 'Retrieval only' : 'Offline'}
                 size="small"
                 color={status?.llmEnabled ? 'success' : status?.ready ? 'warning' : 'error'}
                 sx={{ ml: 'auto', fontSize: '0.65rem' }}
@@ -125,7 +127,7 @@ export default function AiTutorPanel() {
           )}
           {status?.ready && !status.llmEnabled && (
             <Alert severity="info" sx={{ mt: 1, py: 0.5, fontSize: '0.75rem' }}>
-              For GPT answers: open <strong>.env</strong>, set <strong>OPENAI_API_KEY=sk-...</strong>, restart <strong>npm run dev:server</strong>
+              For Groq answers: set <strong>GROQ_API_KEY</strong> in .env or Render, restart server
             </Alert>
           )}
           </Box>

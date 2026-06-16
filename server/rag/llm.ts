@@ -13,14 +13,58 @@ RULES:
 5. Be conversational, encouraging, and structured (short paragraphs or bullets).
 6. For architecture questions, mention components, problems, and trade-offs.`;
 
+const GROQ_BASE_URL = 'https://api.groq.com/openai/v1';
+const DEFAULT_GROQ_MODEL = 'llama-3.3-70b-versatile';
+const DEFAULT_OPENAI_MODEL = 'gpt-4o-mini';
+
+export interface LlmConfig {
+  apiKey: string;
+  baseURL?: string;
+  model: string;
+  provider: 'groq' | 'openai';
+}
+
+export function resolveLlmConfig(): LlmConfig | null {
+  const groqKey = (process.env.GROQ_API_KEY || '').trim();
+  const openaiKey = (process.env.OPENAI_API_KEY || '').trim();
+  const explicitProvider = (process.env.LLM_PROVIDER || '').trim().toLowerCase();
+
+  // Groq key in GROQ_API_KEY or OPENAI_API_KEY (gsk_ prefix)
+  const groqCandidate = groqKey || (openaiKey.startsWith('gsk_') ? openaiKey : '');
+  if (groqCandidate.startsWith('gsk_') && groqCandidate.length > 20) {
+    if (explicitProvider === 'openai') {
+      // user explicitly wants openai — fall through
+    } else {
+      return {
+        apiKey: groqCandidate,
+        baseURL: GROQ_BASE_URL,
+        model: process.env.LLM_MODEL || process.env.GROQ_MODEL || DEFAULT_GROQ_MODEL,
+        provider: 'groq',
+      };
+    }
+  }
+
+  if (openaiKey.startsWith('sk-') && openaiKey !== 'sk-your-key-here' && openaiKey.length > 20) {
+    return {
+      apiKey: openaiKey,
+      model: process.env.LLM_MODEL || process.env.OPENAI_MODEL || DEFAULT_OPENAI_MODEL,
+      provider: 'openai',
+    };
+  }
+
+  return null;
+}
+
 export function isLlmEnabled(): boolean {
-  const key = process.env.OPENAI_API_KEY?.trim();
-  if (!key || key === 'sk-your-key-here' || key.length < 20) return false;
-  return key.startsWith('sk-');
+  return resolveLlmConfig() !== null;
 }
 
 export function getLlmModel(): string {
-  return process.env.OPENAI_MODEL?.trim() || 'gpt-4o-mini';
+  return resolveLlmConfig()?.model ?? DEFAULT_OPENAI_MODEL;
+}
+
+export function getLlmProvider(): 'groq' | 'openai' | null {
+  return resolveLlmConfig()?.provider ?? null;
 }
 
 function buildContextBlock(results: RetrievalResult[]): string {
@@ -48,12 +92,16 @@ export async function generateLlmAnswer(
   history: ChatMessage[] = [],
   context?: ChatContext,
 ): Promise<string> {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
-  if (!apiKey) {
-    throw new Error('OPENAI_API_KEY not configured');
+  const config = resolveLlmConfig();
+  if (!config) {
+    throw new Error('No LLM API key configured (set GROQ_API_KEY or OPENAI_API_KEY)');
   }
 
-  const openai = new OpenAI({ apiKey });
+  const client = new OpenAI({
+    apiKey: config.apiKey,
+    baseURL: config.baseURL,
+  });
+
   const contextBlock = buildContextBlock(results);
   const sessionHints = buildContextHints(context);
 
@@ -69,8 +117,8 @@ export async function generateLlmAnswer(
     { role: 'user', content: message },
   ];
 
-  const completion = await openai.chat.completions.create({
-    model: getLlmModel(),
+  const completion = await client.chat.completions.create({
+    model: config.model,
     messages,
     temperature: 0.4,
     max_tokens: 900,
