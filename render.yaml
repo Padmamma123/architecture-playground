@@ -8,7 +8,7 @@ services:
     runtime: node
     plan: free
     region: oregon
-    buildCommand: npm install
+    buildCommand: npm install --include=dev
     startCommand: npm run start:server
     healthCheckPath: /api/rag/status
     envVars:
@@ -25,9 +25,10 @@ services:
 
   # ── Frontend: React static site ───────────────────────────────────────────
   - type: web
-    name: architecture-playground
+    name: architecture-playground-ui
     runtime: static
-    buildCommand: npm install && npm run build
+    plan: free
+    buildCommand: npm install --include=dev && npm run build
     staticPublishPath: ./dist
     routes:
       - type: rewrite

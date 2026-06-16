@@ -6,7 +6,7 @@ Deploy **Architecture Playground** to [Render](https://render.com) with one Blue
 
 1. GitHub account: [Padmamma123](https://github.com/Padmamma123)
 2. [Render](https://render.com) account (free tier works)
-3. OpenAI API key (for GPT answers in chatbot)
+3. Groq API key (recommended) or OpenAI API key (for LLM answers in chatbot)
 
 ---
 
@@ -37,8 +37,9 @@ git push -u origin main
 4. Render reads `render.yaml` and creates **2 services**:
    - `architecture-playground-api` — Node.js RAG backend
    - `architecture-playground` — React static frontend
-5. Add environment variable when prompted:
-   - **OPENAI_API_KEY** = your `sk-...` key
+5. Add environment variable when prompted (on the **API** service):
+   - **GROQ_API_KEY** = your `gsk_...` key
+   - **LLM_MODEL** = `llama-3.3-70b-versatile` (optional — default in blueprint)
 6. Click **Apply** (~5–10 min)
 
 ---
@@ -47,7 +48,7 @@ git push -u origin main
 
 | Service | URL |
 |---------|-----|
-| Frontend | `https://architecture-playground.onrender.com` |
+| Frontend | `https://architecture-playground-ui.onrender.com` |
 | Backend | `https://architecture-playground-api.onrender.com/api/rag/status` |
 
 Open frontend → AI Tutor → badge should show **RAG + LLM**.
@@ -65,7 +66,7 @@ Open frontend → AI Tutor → badge should show **RAG + LLM**.
 
 ### Frontend (Static Site)
 
-- **Build:** `npm install && npm run build`
+- **Build:** `npm install --include=dev && npm run build` (dev deps required for `tsc` + `vite`)
 - **Publish:** `dist`
 - **Env:** `VITE_RAG_API_URL=https://your-api.onrender.com`
 - **Rewrite:** `/*` → `/index.html`
